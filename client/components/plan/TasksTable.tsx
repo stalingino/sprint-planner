@@ -60,7 +60,7 @@ export function TasksTable({ tasks, sprints, developers, syncing, devColors, onU
                   </div>
                 </td>
                 {/* Key */}
-                <td style={{ padding: '6px 8px', fontWeight: 700, color: C.blue, fontFamily: "'JetBrains Mono', monospace", fontSize: 11, whiteSpace: 'nowrap' }}>
+                <td style={{ padding: '6px 8px', fontWeight: 700, color: C.blue, fontFamily: "ui-monospace, monospace", fontSize: 11, whiteSpace: 'nowrap' }}>
                   {t.jiraKey || <span style={{ color: C.muted, fontStyle: 'italic' }}>local</span>}
                 </td>
                 {/* Summary */}
@@ -119,11 +119,11 @@ export function TasksTable({ tasks, sprints, developers, syncing, devColors, onU
                   </select>
                 </td>
                 {/* Start */}
-                <td style={{ padding: '6px 6px', fontSize: 11, color: C.green, fontFamily: "'JetBrains Mono', monospace", whiteSpace: 'nowrap' }}>
+                <td style={{ padding: '6px 6px', fontSize: 11, color: C.green, fontFamily: "ui-monospace, monospace", whiteSpace: 'nowrap' }}>
                   {formatDisplay(parseDate(t.startDate))}
                 </td>
                 {/* End */}
-                <td style={{ padding: '6px 6px', fontSize: 11, color: C.orange, fontFamily: "'JetBrains Mono', monospace", whiteSpace: 'nowrap' }}>
+                <td style={{ padding: '6px 6px', fontSize: 11, color: C.orange, fontFamily: "ui-monospace, monospace", whiteSpace: 'nowrap' }}>
                   {formatDisplay(parseDate(t.endDate))}
                 </td>
                 {/* Spill */}

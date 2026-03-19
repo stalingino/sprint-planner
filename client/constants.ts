@@ -15,7 +15,7 @@ export const devColors = [
 export const inputStyle: CSSProperties = {
   background: C.input, border: `1px solid ${C.border}`, borderRadius: 5,
   color: C.text, padding: '6px 10px', fontSize: 13, outline: 'none', width: '100%',
-  fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
+  fontFamily: "ui-monospace, monospace",
   boxSizing: 'border-box',
 };
 
@@ -23,7 +23,7 @@ export function btnStyle(color = C.blue): CSSProperties {
   return {
     background: color + '22', border: `1px solid ${color}44`, borderRadius: 6,
     color, padding: '6px 14px', fontSize: 12, cursor: 'pointer', fontWeight: 600,
-    fontFamily: "'JetBrains Mono', monospace", transition: 'all .15s',
+    fontFamily: "ui-monospace, monospace", transition: 'all .15s',
   };
 }
 

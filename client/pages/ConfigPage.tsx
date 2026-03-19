@@ -53,7 +53,7 @@ export function ConfigPage({ onNotify, onJiraConnected }: Props) {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 24, maxWidth: 1400 }}>
         {/* Jira Status */}
         <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, padding: 16 }}>
-          <h3 style={{ color: C.blue, fontSize: 13, marginBottom: 12, fontFamily: "'JetBrains Mono', monospace" }}>
+          <h3 style={{ color: C.blue, fontSize: 13, marginBottom: 12, fontFamily: "ui-monospace, monospace" }}>
             Jira Connection
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>

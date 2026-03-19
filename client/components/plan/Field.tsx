@@ -23,7 +23,7 @@ export function Field({ label, value, onChange, type = 'text', readOnly = false 
         style={{
           background: readOnly ? C.surface2 : C.input, border: `1px solid ${C.border}`, borderRadius: 4,
           color: C.text, padding: '5px 8px', fontSize: 12, width: '100%', outline: 'none',
-          fontFamily: "'JetBrains Mono', monospace", opacity: readOnly ? 0.6 : 1,
+          fontFamily: "ui-monospace, monospace", opacity: readOnly ? 0.6 : 1,
           boxSizing: 'border-box',
         }}
         value={value ?? ''}

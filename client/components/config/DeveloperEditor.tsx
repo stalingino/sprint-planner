@@ -41,7 +41,7 @@ export function DeveloperEditor({ developers, onChange, onNotify }: Props) {
 
   return (
     <div>
-      <h3 style={{ color: C.teal, fontSize: 13, marginBottom: 10, fontFamily: "'JetBrains Mono', monospace" }}>Developers</h3>
+      <h3 style={{ color: C.teal, fontSize: 13, marginBottom: 10, fontFamily: "ui-monospace, monospace" }}>Developers</h3>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 8 }}>
         {developers.map((d, i) => (
           <span key={d.id} style={{

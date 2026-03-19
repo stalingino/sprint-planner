@@ -352,18 +352,18 @@ export default function SprintPlanner() {
   const inputStyle = {
     background: C.input, border: `1px solid ${C.border}`, borderRadius: 5,
     color: C.text, padding: "6px 10px", fontSize: 13, outline: "none", width: "100%",
-    fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
+    fontFamily: "ui-monospace, monospace",
   };
   const btnStyle = (color = C.blue) => ({
     background: color + "22", border: `1px solid ${color}44`, borderRadius: 6,
     color, padding: "6px 14px", fontSize: 12, cursor: "pointer", fontWeight: 600,
-    fontFamily: "'JetBrains Mono', monospace", transition: "all .15s",
+    fontFamily: "ui-monospace, monospace", transition: "all .15s",
   });
   const tabStyle = (active) => ({
     padding: "8px 20px", fontSize: 13, fontWeight: 600, cursor: "pointer", borderRadius: "8px 8px 0 0",
     background: active ? C.surface : "transparent", color: active ? C.text : C.muted,
     border: active ? `1px solid ${C.border}` : "1px solid transparent", borderBottom: "none",
-    fontFamily: "'JetBrains Mono', monospace",
+    fontFamily: "ui-monospace, monospace",
   });
 
   return (
@@ -375,7 +375,7 @@ export default function SprintPlanner() {
           background: toast.type === "error" ? C.red + "22" : toast.type === "success" ? C.green + "22" : C.blue + "22",
           border: `1px solid ${toast.type === "error" ? C.red : toast.type === "success" ? C.green : C.blue}44`,
           color: toast.type === "error" ? C.red : toast.type === "success" ? C.green : C.blue,
-          fontSize: 12, fontWeight: 600, maxWidth: 400, fontFamily: "'JetBrains Mono', monospace",
+          fontSize: 12, fontWeight: 600, maxWidth: 400, fontFamily: "ui-monospace, monospace",
         }}>
           {toast.msg}
         </div>
@@ -384,7 +384,7 @@ export default function SprintPlanner() {
       {/* Header */}
       <div style={{ padding: "16px 24px", borderBottom: `1px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span style={{ fontSize: 22, fontWeight: 800, letterSpacing: -1, fontFamily: "'JetBrains Mono', monospace", color: C.purple }}>
+          <span style={{ fontSize: 22, fontWeight: 800, letterSpacing: -1, fontFamily: "ui-monospace, monospace", color: C.purple }}>
             ▸ Sprint Planner
           </span>
           <span style={{ fontSize: 11, color: C.muted, marginTop: 2 }}>Jira-synced</span>
@@ -410,7 +410,7 @@ export default function SprintPlanner() {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 20, maxWidth: 1200 }}>
             {/* Jira Connection */}
             <div>
-              <h3 style={{ color: C.blue, fontSize: 13, marginBottom: 10, fontFamily: "'JetBrains Mono', monospace" }}>Jira Connection</h3>
+              <h3 style={{ color: C.blue, fontSize: 13, marginBottom: 10, fontFamily: "ui-monospace, monospace" }}>Jira Connection</h3>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 <input style={inputStyle} placeholder="Base URL (e.g. https://yoursite.atlassian.net)" value={state.jira.baseUrl}
                   onChange={(e) => save({ ...state, jira: { ...state.jira, baseUrl: e.target.value } })} />
@@ -435,7 +435,7 @@ export default function SprintPlanner() {
 
             {/* Sprints */}
             <div>
-              <h3 style={{ color: C.green, fontSize: 13, marginBottom: 10, fontFamily: "'JetBrains Mono', monospace" }}>Sprints</h3>
+              <h3 style={{ color: C.green, fontSize: 13, marginBottom: 10, fontFamily: "ui-monospace, monospace" }}>Sprints</h3>
               <div style={{ display: "flex", flexDirection: "column", gap: 4, maxHeight: 220, overflowY: "auto" }}>
                 {state.sprints.map((sp, i) => (
                   <div key={sp.id} style={{ display: "grid", gridTemplateColumns: "1fr 100px 100px 70px 24px", gap: 4, alignItems: "center" }}>
@@ -462,7 +462,7 @@ export default function SprintPlanner() {
 
             {/* Devs + Holidays */}
             <div>
-              <h3 style={{ color: C.teal, fontSize: 13, marginBottom: 10, fontFamily: "'JetBrains Mono', monospace" }}>Developers</h3>
+              <h3 style={{ color: C.teal, fontSize: 13, marginBottom: 10, fontFamily: "ui-monospace, monospace" }}>Developers</h3>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 12 }}>
                 {state.developers.map((d, i) => (
                   <span key={i} style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "3px 8px", borderRadius: 4, background: devColors[i % devColors.length] + "22", color: devColors[i % devColors.length], fontSize: 11, fontWeight: 600 }}>
@@ -474,7 +474,7 @@ export default function SprintPlanner() {
                   onKeyDown={(e) => { if (e.key === "Enter" && e.target.value.trim()) { save({ ...state, developers: [...state.developers, e.target.value.trim()] }); e.target.value = ""; } }} />
               </div>
 
-              <h3 style={{ color: C.orange, fontSize: 13, marginBottom: 8, fontFamily: "'JetBrains Mono', monospace" }}>Holidays</h3>
+              <h3 style={{ color: C.orange, fontSize: 13, marginBottom: 8, fontFamily: "ui-monospace, monospace" }}>Holidays</h3>
               <div style={{ display: "flex", flexDirection: "column", gap: 3, maxHeight: 120, overflowY: "auto" }}>
                 {state.holidays.map((h, i) => (
                   <div key={i} style={{ display: "grid", gridTemplateColumns: "110px 1fr 20px", gap: 4, alignItems: "center" }}>
@@ -591,7 +591,7 @@ function TasksTable({ tasks, state, updateTask, removeTask, moveTask, pushTask, 
                   </div>
                 </td>
                 {/* Key */}
-                <td style={{ padding: "6px 8px", fontWeight: 700, color: C.blue, fontFamily: "'JetBrains Mono', monospace", fontSize: 11, whiteSpace: "nowrap" }}>
+                <td style={{ padding: "6px 8px", fontWeight: 700, color: C.blue, fontFamily: "ui-monospace, monospace", fontSize: 11, whiteSpace: "nowrap" }}>
                   {t.jiraKey || <span style={{ color: C.muted, fontStyle: "italic" }}>local</span>}
                 </td>
                 {/* Summary */}
@@ -627,11 +627,11 @@ function TasksTable({ tasks, state, updateTask, removeTask, moveTask, pushTask, 
                 {/* Status */}
                 <td style={{ padding: "6px 6px" }}><StatusBadge status={t.status} /></td>
                 {/* Start */}
-                <td style={{ padding: "6px 6px", fontSize: 11, color: C.green, fontFamily: "'JetBrains Mono', monospace", whiteSpace: "nowrap" }}>
+                <td style={{ padding: "6px 6px", fontSize: 11, color: C.green, fontFamily: "ui-monospace, monospace", whiteSpace: "nowrap" }}>
                   {formatDisplay(parseDate(t.startDate))}
                 </td>
                 {/* End */}
-                <td style={{ padding: "6px 6px", fontSize: 11, color: C.orange, fontFamily: "'JetBrains Mono', monospace", whiteSpace: "nowrap" }}>
+                <td style={{ padding: "6px 6px", fontSize: 11, color: C.orange, fontFamily: "ui-monospace, monospace", whiteSpace: "nowrap" }}>
                   {formatDisplay(parseDate(t.endDate))}
                 </td>
                 {/* Spill */}
@@ -710,7 +710,7 @@ function Field({ label, value, onChange, type = "text", readOnly = false }) {
         style={{
           background: readOnly ? C.surface2 : C.input, border: `1px solid ${C.border}`, borderRadius: 4,
           color: C.text, padding: "5px 8px", fontSize: 12, width: "100%", outline: "none",
-          fontFamily: "'JetBrains Mono', monospace", opacity: readOnly ? 0.6 : 1,
+          fontFamily: "ui-monospace, monospace", opacity: readOnly ? 0.6 : 1,
         }}
         value={value ?? ""}
         onChange={onChange ? (e) => onChange(e.target.value) : undefined}
@@ -757,7 +757,7 @@ function TimelineView({ tasks, sprints, holidays, timelineDays, today, devColors
               height: rowH, display: "flex", alignItems: "center", padding: "0 12px", borderBottom: `1px solid ${C.border}11`,
               background: i % 2 ? C.surface2 : C.surface, gap: 6,
             }}>
-              {t.jiraKey && <span style={{ fontSize: 9, color: C.blue, fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, minWidth: 60 }}>{t.jiraKey}</span>}
+              {t.jiraKey && <span style={{ fontSize: 9, color: C.blue, fontFamily: "ui-monospace, monospace", fontWeight: 700, minWidth: 60 }}>{t.jiraKey}</span>}
               <span style={{ flex: 1, fontSize: 11, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{t.summary}</span>
               <span style={{ width: 80, fontSize: 10, color, fontWeight: 600, textAlign: "center" }}>{t.developer}</span>
               <span style={{ width: 40, fontSize: 10, color: C.orange, textAlign: "center", fontWeight: 700 }}>{t.effortDays}</span>
@@ -777,7 +777,7 @@ function TimelineView({ tasks, sprints, holidays, timelineDays, today, devColors
               const showLabel = sName && sName !== prevName;
               return (
                 <div key={di} style={{ width: cellW, minWidth: cellW, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8, fontWeight: 700, color: sName ? C.purple : C.muted, background: sName ? C.purple + "0a" : "transparent", borderLeft: showLabel ? `2px solid ${C.purple}55` : "none", position: "relative" }}>
-                  {showLabel && <span style={{ position: "absolute", left: 4, fontSize: 9, whiteSpace: "nowrap", color: C.purple, fontFamily: "'JetBrains Mono', monospace" }}>{sName}</span>}
+                  {showLabel && <span style={{ position: "absolute", left: 4, fontSize: 9, whiteSpace: "nowrap", color: C.purple, fontFamily: "ui-monospace, monospace" }}>{sName}</span>}
                 </div>
               );
             })}
@@ -797,7 +797,7 @@ function TimelineView({ tasks, sprints, holidays, timelineDays, today, devColors
                   position: "relative",
                 }}>
                   {isFirst && <span style={{ fontSize: 7, color: C.blue, fontWeight: 700, position: "absolute", top: 1 }}>{d.toLocaleDateString("en", { month: "short" })}</span>}
-                  <span style={{ fontSize: 10, fontWeight: isToday ? 800 : 600, color: isToday ? C.green : wknd ? C.red + "99" : hol ? C.red : C.muted, fontFamily: "'JetBrains Mono', monospace", marginTop: isFirst ? 6 : 0 }}>
+                  <span style={{ fontSize: 10, fontWeight: isToday ? 800 : 600, color: isToday ? C.green : wknd ? C.red + "99" : hol ? C.red : C.muted, fontFamily: "ui-monospace, monospace", marginTop: isFirst ? 6 : 0 }}>
                     {d.getDate()}
                   </span>
                   <span style={{ fontSize: 7, color: C.muted + "88" }}>{["Su","Mo","Tu","We","Th","Fr","Sa"][d.getDay()]}</span>

@@ -62,7 +62,7 @@ export function TimelineView({ tasks, sprints, holidays, devColors, developers }
               borderBottom: `1px solid ${C.border}11`, background: i % 2 ? C.surface2 : C.surface, gap: 6,
             }}>
               {t.jiraKey && (
-                <span style={{ fontSize: 9, color: C.blue, fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, minWidth: 60 }}>
+                <span style={{ fontSize: 9, color: C.blue, fontFamily: "ui-monospace, monospace", fontWeight: 700, minWidth: 60 }}>
                   {t.jiraKey}
                 </span>
               )}
@@ -91,7 +91,7 @@ export function TimelineView({ tasks, sprints, holidays, devColors, developers }
                   borderLeft: showLabel ? `2px solid ${C.purple}55` : 'none', position: 'relative',
                 }}>
                   {showLabel && (
-                    <span style={{ position: 'absolute', left: 4, fontSize: 9, whiteSpace: 'nowrap', color: C.purple, fontFamily: "'JetBrains Mono', monospace" }}>
+                    <span style={{ position: 'absolute', left: 4, fontSize: 9, whiteSpace: 'nowrap', color: C.purple, fontFamily: "ui-monospace, monospace" }}>
                       {sName}
                     </span>
                   )}
@@ -120,7 +120,7 @@ export function TimelineView({ tasks, sprints, holidays, devColors, developers }
                   <span style={{
                     fontSize: 10, fontWeight: isToday ? 800 : 600,
                     color: isToday ? C.green : wknd ? C.red + '99' : hol ? C.red : C.muted,
-                    fontFamily: "'JetBrains Mono', monospace", marginTop: isFirst ? 6 : 0,
+                    fontFamily: "ui-monospace, monospace", marginTop: isFirst ? 6 : 0,
                   }}>
                     {d.getDate()}
                   </span>

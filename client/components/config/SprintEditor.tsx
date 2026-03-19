@@ -45,7 +45,7 @@ export function SprintEditor({ sprints, onChange, onNotify }: Props) {
 
   return (
     <div>
-      <h3 style={{ color: C.green, fontSize: 13, marginBottom: 10, fontFamily: "'JetBrains Mono', monospace" }}>Sprints</h3>
+      <h3 style={{ color: C.green, fontSize: 13, marginBottom: 10, fontFamily: "ui-monospace, monospace" }}>Sprints</h3>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 4, maxHeight: 220, overflowY: 'auto' }}>
         {sprints.map(sp => (
           <div key={sp.id} style={{ display: 'grid', gridTemplateColumns: '1fr 100px 100px 70px 24px', gap: 4, alignItems: 'center' }}>

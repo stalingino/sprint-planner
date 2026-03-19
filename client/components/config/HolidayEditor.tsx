@@ -40,7 +40,7 @@ export function HolidayEditor({ holidays, onChange, onNotify }: Props) {
 
   return (
     <div>
-      <h3 style={{ color: C.orange, fontSize: 13, marginBottom: 8, fontFamily: "'JetBrains Mono', monospace" }}>Holidays</h3>
+      <h3 style={{ color: C.orange, fontSize: 13, marginBottom: 8, fontFamily: "ui-monospace, monospace" }}>Holidays</h3>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 3, maxHeight: 160, overflowY: 'auto' }}>
         {holidays.map(h => (
           <div key={h.id} style={{ display: 'grid', gridTemplateColumns: '110px 1fr 20px', gap: 4, alignItems: 'center' }}>

@@ -80,7 +80,7 @@ export function DbManager({ onNotify }: Props) {
 
   return (
     <div>
-      <h3 style={{ color: C.teal, fontSize: 13, marginBottom: 12, fontFamily: "'JetBrains Mono', monospace" }}>
+      <h3 style={{ color: C.teal, fontSize: 13, marginBottom: 12, fontFamily: "ui-monospace, monospace" }}>
         Database
       </h3>
 

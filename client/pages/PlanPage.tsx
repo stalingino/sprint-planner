@@ -151,7 +151,7 @@ export function PlanPage({ onNotify, onJiraConnected }: Props) {
     padding: '8px 20px', fontSize: 13, fontWeight: 600, cursor: 'pointer', borderRadius: '8px 8px 0 0',
     background: active ? C.surface : 'transparent', color: active ? C.text : C.muted,
     border: active ? `1px solid ${C.border}` : '1px solid transparent', borderBottom: 'none',
-    fontFamily: "'JetBrains Mono', monospace",
+    fontFamily: "ui-monospace, monospace",
   });
 
   const devNames = developers.map(d => d.name);

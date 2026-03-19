@@ -12,7 +12,7 @@ export function Toast({ msg, type }: ToastProps) {
       position: 'fixed', top: 16, right: 16, zIndex: 999, padding: '10px 20px', borderRadius: 8,
       background: color + '22', border: `1px solid ${color}44`, color,
       fontSize: 12, fontWeight: 600, maxWidth: 400,
-      fontFamily: "'JetBrains Mono', monospace",
+      fontFamily: "ui-monospace, monospace",
     }}>
       {msg}
     </div>

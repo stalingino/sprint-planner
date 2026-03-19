@@ -39,7 +39,7 @@ function App() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <span style={{
             fontSize: 22, fontWeight: 800, letterSpacing: -1,
-            fontFamily: "'JetBrains Mono', monospace", color: C.purple,
+            fontFamily: "ui-monospace, monospace", color: C.purple,
           }}>
             ▸ Sprint Planner
           </span>
