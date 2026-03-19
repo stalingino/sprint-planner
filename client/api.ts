@@ -33,7 +33,7 @@ export const api = {
   },
   developers: {
     list: () => get('/api/developers'),
-    create: (name: string) => post('/api/developers', { name }),
+    create: (name: string, jiraAccountId?: string | null) => post('/api/developers', { name, jiraAccountId }),
     remove: (id: number) => del(`/api/developers/${id}`),
     reorder: (id: number, direction: number) => post('/api/developers/reorder', { id, direction }),
   },
@@ -52,6 +52,7 @@ export const api = {
     push: (taskId: string) => post(`/api/jira/push/${taskId}`),
     pullAll: () => post('/api/jira/pull-all'),
     pushAll: () => post('/api/jira/push-all'),
+    searchUsers: (q: string) => get(`/api/jira/search-users?q=${encodeURIComponent(q)}`),
   },
   import: (data: object) => post('/api/import', data),
   db: {

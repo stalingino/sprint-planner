@@ -12,6 +12,9 @@ export function closeDb(): void { db.close(); }
 db.exec('PRAGMA journal_mode=WAL');
 db.exec('PRAGMA foreign_keys=ON');
 
+// Migrations for existing databases
+try { db.exec('ALTER TABLE developers ADD COLUMN jira_account_id TEXT'); } catch {}
+
 db.exec(`
 CREATE TABLE IF NOT EXISTS sprints (
   id          TEXT PRIMARY KEY,
@@ -23,9 +26,10 @@ CREATE TABLE IF NOT EXISTS sprints (
 );
 
 CREATE TABLE IF NOT EXISTS developers (
-  id          INTEGER PRIMARY KEY AUTOINCREMENT,
-  name        TEXT NOT NULL UNIQUE,
-  sort_order  INTEGER NOT NULL DEFAULT 0
+  id               INTEGER PRIMARY KEY AUTOINCREMENT,
+  name             TEXT NOT NULL UNIQUE,
+  jira_account_id  TEXT,
+  sort_order       INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS holidays (

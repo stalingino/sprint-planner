@@ -31,7 +31,7 @@ async function handleApi(req: Request, url: URL): Promise<Response> {
     case 'sprints':   return handleSprints(req, id);
     case 'developers': return handleDevelopers(req, id);
     case 'holidays':  return handleHolidays(req, id);
-    case 'jira':      return handleJira(req, id, sub);
+    case 'jira':      return handleJira(req, url, id, sub);
     case 'config':    return handleConfig(req);
     case 'import':    return handleImport(req);
     case 'db':        return handleDb(req, id);

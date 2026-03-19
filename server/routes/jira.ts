@@ -63,7 +63,23 @@ function buildPushPayload(task: any, fm: Record<string, string>): Record<string,
   return payload;
 }
 
-export async function handleJira(req: Request, action?: string, key?: string): Promise<Response> {
+export async function handleJira(req: Request, url: URL, action?: string, key?: string): Promise<Response> {
+  // GET-only actions
+  if (action === 'search-users') {
+    if (req.method !== 'GET') return new Response('Method not allowed', { status: 405 });
+    const q = url.searchParams.get('q') ?? '';
+    if (!q.trim()) return Response.json([]);
+    const results = await jiraGet(`/user/search?query=${encodeURIComponent(q)}&maxResults=10`);
+    return Response.json(
+      (results as any[]).map((u: any) => ({
+        accountId: u.accountId,
+        displayName: u.displayName,
+        email: u.emailAddress ?? '',
+        avatarUrl: u.avatarUrls?.['24x24'] ?? '',
+      }))
+    );
+  }
+
   if (req.method !== 'POST') return new Response('Method not allowed', { status: 405 });
 
   switch (action) {

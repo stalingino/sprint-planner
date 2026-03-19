@@ -31,6 +31,7 @@ export interface Sprint {
 export interface Developer {
   id: number;
   name: string;
+  jiraAccountId: string | null;
 }
 
 export interface Holiday {

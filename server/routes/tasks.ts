@@ -1,5 +1,6 @@
 import { db } from '../db';
 import { recalcDates } from '../lib/dateUtils';
+import { jiraPut, isConfigured as jiraConfigured } from '../lib/jiraClient';
 
 function uid(): string {
   return `t${Date.now()}_${Math.floor(Math.random() * 10000)}`;
@@ -127,6 +128,19 @@ export function handleTasks(req: Request, id?: string): Response | Promise<Respo
       if (Object.keys(updates).length > 0) {
         const setClauses = Object.keys(updates).map(k => `${k}=?`).join(', ');
         db.query(`UPDATE tasks SET ${setClauses} WHERE id=?`).run(...Object.values(updates), id);
+      }
+
+      // Auto-push assignee to Jira when developer changes
+      if (body.developer !== undefined && jiraConfigured()) {
+        const task = db.query('SELECT jira_key FROM tasks WHERE id=?').get(id) as any;
+        if (task?.jira_key) {
+          const dev = updates.developer_id
+            ? (db.query('SELECT jira_account_id FROM developers WHERE id=?').get(updates.developer_id) as any)
+            : null;
+          const accountId = dev?.jira_account_id ?? null;
+          jiraPut(`/issue/${task.jira_key}`, { fields: { assignee: accountId ? { accountId } : null } })
+            .catch(() => {}); // fire-and-forget; don't fail the update
+        }
       }
 
       const all = getTasksWithDates();
