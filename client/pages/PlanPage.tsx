@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { Task, Sprint, Developer, Holiday } from '../types';
-import { C, btnStyle, devColors } from '../constants';
+import { btnStyle, devColors } from '../constants';
+import { useTheme } from '../ThemeContext';
 import { api } from '../api';
 import { IssueAdderBar } from '../components/plan/IssueAdderBar';
 import { TasksTable } from '../components/plan/TasksTable';
@@ -15,6 +16,7 @@ interface Props {
 type Tab = 'tasks' | 'timeline' | 'workload';
 
 export function PlanPage({ onNotify, onJiraConnected }: Props) {
+  const { C } = useTheme();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [sprints, setSprints] = useState<Sprint[]>([]);
   const [developers, setDevelopers] = useState<Developer[]>([]);
@@ -23,6 +25,7 @@ export function PlanPage({ onNotify, onJiraConnected }: Props) {
   const [syncing, setSyncing] = useState<Record<string, boolean>>({});
   const [showMigration, setShowMigration] = useState(false);
   const [importing, setImporting] = useState(false);
+  const [jiraBaseUrl, setJiraBaseUrl] = useState('');
 
   async function loadAll() {
     const [t, s, d, h, cfg] = await Promise.all([
@@ -36,6 +39,7 @@ export function PlanPage({ onNotify, onJiraConnected }: Props) {
     setSprints(s);
     setDevelopers(d);
     setHolidays(h);
+    setJiraBaseUrl(cfg.jiraBaseUrl || '');
     onJiraConnected(cfg.jiraConnected);
     if (t.length === 0 && s.length === 0 && localStorage.getItem('sprint-planner-state')) {
       setShowMigration(true);
@@ -148,10 +152,10 @@ export function PlanPage({ onNotify, onJiraConnected }: Props) {
   }
 
   const tabStyle = (active: boolean): React.CSSProperties => ({
-    padding: '8px 20px', fontSize: 13, fontWeight: 600, cursor: 'pointer', borderRadius: '8px 8px 0 0',
+    padding: '8px 22px', fontSize: 14, fontWeight: 600, cursor: 'pointer', borderRadius: '8px 8px 0 0',
     background: active ? C.surface : 'transparent', color: active ? C.text : C.muted,
     border: active ? `1px solid ${C.border}` : '1px solid transparent', borderBottom: 'none',
-    fontFamily: "ui-monospace, monospace",
+    fontFamily: 'ui-monospace, monospace',
   });
 
   const devNames = developers.map(d => d.name);
@@ -164,7 +168,7 @@ export function PlanPage({ onNotify, onJiraConnected }: Props) {
           padding: '12px 24px', background: C.purple + '18', borderBottom: `1px solid ${C.purple}44`,
           display: 'flex', alignItems: 'center', gap: 12,
         }}>
-          <span style={{ fontSize: 12, color: C.purple, fontWeight: 600 }}>
+          <span style={{ fontSize: 13, color: C.purple, fontWeight: 600 }}>
             Found existing data in browser storage. Import it to continue where you left off.
           </span>
           <button style={btnStyle(C.purple)} onClick={handleImport} disabled={importing}>
@@ -201,6 +205,7 @@ export function PlanPage({ onNotify, onJiraConnected }: Props) {
             developers={developers}
             syncing={syncing}
             devColors={devColors}
+            jiraBaseUrl={jiraBaseUrl}
             onUpdate={handleUpdate}
             onRemove={handleRemove}
             onMove={handleMove}

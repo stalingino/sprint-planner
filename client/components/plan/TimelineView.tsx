@@ -1,6 +1,6 @@
 import { useRef, useEffect } from 'react';
 import type { Task, Sprint, Holiday } from '../../types';
-import { C } from '../../constants';
+import { useTheme } from '../../ThemeContext';
 import { parseDate, formatDate, isWeekend, isHoliday, eachDay } from '../../dateUtils';
 
 interface Props {
@@ -12,10 +12,11 @@ interface Props {
 }
 
 export function TimelineView({ tasks, sprints, holidays, devColors, developers }: Props) {
+  const { C } = useTheme();
   const scrollRef = useRef<HTMLDivElement>(null);
-  const cellW = 28;
-  const rowH = 28;
-  const labelW = 320;
+  const cellW = 30;
+  const rowH = 30;
+  const labelW = 340;
 
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const activeTasks = tasks.filter(t => t.startDate && t.endDate && t.developer);
@@ -47,11 +48,11 @@ export function TimelineView({ tasks, sprints, holidays, devColors, developers }
         <div style={{
           height: rowH * 2, borderBottom: `1px solid ${C.border}`,
           display: 'flex', alignItems: 'flex-end', padding: '0 12px 6px',
-          fontWeight: 700, fontSize: 10, color: C.muted, textTransform: 'uppercase', letterSpacing: 1,
+          fontWeight: 700, fontSize: 11, color: C.muted, textTransform: 'uppercase', letterSpacing: 1,
         }}>
           <span style={{ flex: 1 }}>Task</span>
-          <span style={{ width: 80, textAlign: 'center' }}>Developer</span>
-          <span style={{ width: 40, textAlign: 'center' }}>Days</span>
+          <span style={{ width: 90, textAlign: 'center' }}>Developer</span>
+          <span style={{ width: 44, textAlign: 'center' }}>Days</span>
         </div>
         {activeTasks.map((t, i) => {
           const devIdx = developers.indexOf(t.developer);
@@ -62,13 +63,13 @@ export function TimelineView({ tasks, sprints, holidays, devColors, developers }
               borderBottom: `1px solid ${C.border}11`, background: i % 2 ? C.surface2 : C.surface, gap: 6,
             }}>
               {t.jiraKey && (
-                <span style={{ fontSize: 9, color: C.blue, fontFamily: "ui-monospace, monospace", fontWeight: 700, minWidth: 60 }}>
+                <span style={{ fontSize: 10, color: C.blue, fontFamily: 'ui-monospace, monospace', fontWeight: 700, minWidth: 64 }}>
                   {t.jiraKey}
                 </span>
               )}
-              <span style={{ flex: 1, fontSize: 11, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.summary}</span>
-              <span style={{ width: 80, fontSize: 10, color, fontWeight: 600, textAlign: 'center' }}>{t.developer}</span>
-              <span style={{ width: 40, fontSize: 10, color: C.orange, textAlign: 'center', fontWeight: 700 }}>{t.effortDays}</span>
+              <span style={{ flex: 1, fontSize: 12, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.summary}</span>
+              <span style={{ width: 90, fontSize: 11, color, fontWeight: 600, textAlign: 'center' }}>{t.developer}</span>
+              <span style={{ width: 44, fontSize: 11, color: C.orange, textAlign: 'center', fontWeight: 700 }}>{t.effortDays}</span>
             </div>
           );
         })}
@@ -86,12 +87,12 @@ export function TimelineView({ tasks, sprints, holidays, devColors, developers }
               return (
                 <div key={di} style={{
                   width: cellW, minWidth: cellW, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 8, fontWeight: 700, color: sName ? C.purple : C.muted,
+                  fontSize: 9, fontWeight: 700, color: sName ? C.purple : C.muted,
                   background: sName ? C.purple + '0a' : 'transparent',
                   borderLeft: showLabel ? `2px solid ${C.purple}55` : 'none', position: 'relative',
                 }}>
                   {showLabel && (
-                    <span style={{ position: 'absolute', left: 4, fontSize: 9, whiteSpace: 'nowrap', color: C.purple, fontFamily: "ui-monospace, monospace" }}>
+                    <span style={{ position: 'absolute', left: 4, fontSize: 10, whiteSpace: 'nowrap', color: C.purple, fontFamily: 'ui-monospace, monospace' }}>
                       {sName}
                     </span>
                   )}
@@ -113,18 +114,18 @@ export function TimelineView({ tasks, sprints, holidays, devColors, developers }
                   borderLeft: isFirst ? `1px solid ${C.blue}44` : 'none', position: 'relative',
                 }}>
                   {isFirst && (
-                    <span style={{ fontSize: 7, color: C.blue, fontWeight: 700, position: 'absolute', top: 1 }}>
+                    <span style={{ fontSize: 8, color: C.blue, fontWeight: 700, position: 'absolute', top: 1 }}>
                       {d.toLocaleDateString('en', { month: 'short' })}
                     </span>
                   )}
                   <span style={{
-                    fontSize: 10, fontWeight: isToday ? 800 : 600,
+                    fontSize: 11, fontWeight: isToday ? 800 : 600,
                     color: isToday ? C.green : wknd ? C.red + '99' : hol ? C.red : C.muted,
-                    fontFamily: "ui-monospace, monospace", marginTop: isFirst ? 6 : 0,
+                    fontFamily: 'ui-monospace, monospace', marginTop: isFirst ? 6 : 0,
                   }}>
                     {d.getDate()}
                   </span>
-                  <span style={{ fontSize: 7, color: C.muted + '88' }}>
+                  <span style={{ fontSize: 8, color: C.muted + '88' }}>
                     {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'][d.getDay()]}
                   </span>
                 </div>
@@ -150,12 +151,12 @@ export function TimelineView({ tasks, sprints, holidays, devColors, developers }
                   return (
                     <div key={di} style={{
                       width: cellW, minWidth: cellW, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      background: isWork ? color + '33' : isNonWork ? C.surface2 : isToday ? C.green + '08' : wknd || hol ? '#0a0a12' : 'transparent',
+                      background: isWork ? color + '33' : isNonWork ? C.surface2 : isToday ? C.green + '08' : wknd || hol ? C.surface2 + '66' : 'transparent',
                       borderLeft: isWork && ds === t.startDate ? `2px solid ${color}` : 'none',
                       borderRight: isWork && ds === t.endDate ? `2px solid ${color}` : 'none',
                     }}>
                       {isWork && <div style={{ width: '100%', height: 14, background: color + '66', borderRadius: ds === t.startDate ? '3px 0 0 3px' : ds === t.endDate ? '0 3px 3px 0' : 0 }} />}
-                      {isNonWork && <span style={{ fontSize: 8, color: C.muted + '66' }}>·</span>}
+                      {isNonWork && <span style={{ fontSize: 9, color: C.muted + '66' }}>·</span>}
                     </div>
                   );
                 })}

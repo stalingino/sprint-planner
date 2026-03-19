@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 import type { Developer } from '../../types';
-import { C, inputStyle, devColors } from '../../constants';
+import { devColors } from '../../constants';
+import { useTheme } from '../../ThemeContext';
 import { api } from '../../api';
 
 interface JiraUser {
@@ -17,6 +18,7 @@ interface Props {
 }
 
 export function DeveloperEditor({ developers, onChange, onNotify }: Props) {
+  const { C, inputStyle } = useTheme();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<JiraUser[]>([]);
   const [open, setOpen] = useState(false);
@@ -24,7 +26,6 @@ export function DeveloperEditor({ developers, onChange, onNotify }: Props) {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown on outside click
   useEffect(() => {
     function onDown(e: MouseEvent) {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
@@ -46,7 +47,6 @@ export function DeveloperEditor({ developers, onChange, onNotify }: Props) {
         setResults(users);
         setOpen(true);
       } catch {
-        // Jira not configured — allow plain-name entry only
         setResults([]);
         setOpen(false);
       } finally {
@@ -98,21 +98,21 @@ export function DeveloperEditor({ developers, onChange, onNotify }: Props) {
 
   return (
     <div>
-      <h3 style={{ color: C.teal, fontSize: 13, marginBottom: 10, fontFamily: "ui-monospace, monospace" }}>Developers</h3>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 8 }}>
+      <h3 style={{ color: C.teal, fontSize: 15, marginBottom: 10, fontFamily: 'ui-monospace, monospace' }}>Developers</h3>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 10 }}>
         {developers.map((d, i) => (
           <span key={d.id} style={{
-            display: 'inline-flex', alignItems: 'center', gap: 4, padding: '3px 8px', borderRadius: 4,
+            display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 10px', borderRadius: 4,
             background: devColors[i % devColors.length] + '22', color: devColors[i % devColors.length],
-            fontSize: 11, fontWeight: 600,
+            fontSize: 13, fontWeight: 600,
           }}>
-            <button style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', fontSize: 9, lineHeight: 1, padding: 0 }}
+            <button style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', fontSize: 10, lineHeight: 1, padding: 0 }}
               onClick={() => handleReorder(d.id, -1)}>▲</button>
             {d.name}
             {d.jiraAccountId && (
-              <span title="Linked to Jira" style={{ fontSize: 9, opacity: 0.7 }}>⬡</span>
+              <span title="Linked to Jira" style={{ fontSize: 10, opacity: 0.7 }}>⬡</span>
             )}
-            <button style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', fontSize: 9, lineHeight: 1, padding: 0 }}
+            <button style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', fontSize: 10, lineHeight: 1, padding: 0 }}
               onClick={() => handleReorder(d.id, 1)}>▼</button>
             <span style={{ cursor: 'pointer', opacity: 0.6 }} onClick={() => handleRemove(d.id)}>×</span>
           </span>
@@ -122,7 +122,7 @@ export function DeveloperEditor({ developers, onChange, onNotify }: Props) {
       {/* Combobox */}
       <div ref={wrapperRef} style={{ position: 'relative', display: 'inline-block' }}>
         <input
-          style={{ ...inputStyle, width: 200, fontSize: 11, padding: '3px 6px' }}
+          style={{ ...inputStyle, width: 220, fontSize: 13, padding: '5px 8px' }}
           placeholder="+ Search Jira or add name…"
           value={query}
           onChange={e => handleQueryChange(e.target.value)}
@@ -132,14 +132,14 @@ export function DeveloperEditor({ developers, onChange, onNotify }: Props) {
           }}
         />
         {loading && (
-          <span style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', fontSize: 10, color: C.muted }}>…</span>
+          <span style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', fontSize: 12, color: C.muted }}>…</span>
         )}
         {open && results.length > 0 && (
           <div style={{
             position: 'absolute', top: '100%', left: 0, zIndex: 100,
             background: C.surface2, border: `1px solid ${C.border}`, borderRadius: 6,
-            minWidth: 260, maxHeight: 220, overflowY: 'auto', marginTop: 2,
-            boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
+            minWidth: 280, maxHeight: 240, overflowY: 'auto', marginTop: 2,
+            boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
           }}>
             {results.map(u => (
               <div
@@ -147,18 +147,18 @@ export function DeveloperEditor({ developers, onChange, onNotify }: Props) {
                 onMouseDown={() => handleSelect(u)}
                 style={{
                   display: 'flex', alignItems: 'center', gap: 8,
-                  padding: '6px 10px', cursor: 'pointer', fontSize: 12,
+                  padding: '8px 12px', cursor: 'pointer', fontSize: 13,
                   borderBottom: `1px solid ${C.border}22`,
                 }}
                 onMouseEnter={e => (e.currentTarget.style.background = C.surface)}
                 onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
               >
                 {u.avatarUrl && (
-                  <img src={u.avatarUrl} alt="" style={{ width: 20, height: 20, borderRadius: '50%', flexShrink: 0 }} />
+                  <img src={u.avatarUrl} alt="" style={{ width: 22, height: 22, borderRadius: '50%', flexShrink: 0 }} />
                 )}
                 <div>
                   <div style={{ color: C.text, fontWeight: 600 }}>{u.displayName}</div>
-                  {u.email && <div style={{ color: C.muted, fontSize: 10 }}>{u.email}</div>}
+                  {u.email && <div style={{ color: C.muted, fontSize: 11 }}>{u.email}</div>}
                 </div>
               </div>
             ))}

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import type { Sprint, Developer, Holiday, Config } from '../types';
-import { C, btnStyle } from '../constants';
+import { btnStyle } from '../constants';
+import { useTheme } from '../ThemeContext';
 import { api } from '../api';
 import { SprintEditor } from '../components/config/SprintEditor';
 import { DeveloperEditor } from '../components/config/DeveloperEditor';
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export function ConfigPage({ onNotify, onJiraConnected }: Props) {
+  const { C } = useTheme();
   const [config, setConfig] = useState<Config | null>(null);
   const [sprints, setSprints] = useState<Sprint[]>([]);
   const [developers, setDevelopers] = useState<Developer[]>([]);
@@ -60,22 +62,22 @@ export function ConfigPage({ onNotify, onJiraConnected }: Props) {
 
         {/* Jira Connection */}
         <div style={panel}>
-          <h3 style={{ color: C.blue, fontSize: 13, marginBottom: 16, fontFamily: "ui-monospace, monospace" }}>
+          <h3 style={{ color: C.blue, fontSize: 15, marginBottom: 16, fontFamily: 'ui-monospace, monospace' }}>
             Jira Connection
           </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {config?.jiraBaseUrl && (
-              <div style={{ fontSize: 12, color: C.muted }}>
+              <div style={{ fontSize: 13, color: C.muted }}>
                 Instance: <span style={{ color: C.text, fontWeight: 600 }}>{config.jiraBaseUrl}</span>
               </div>
             )}
             <div>
               {config?.jiraConnected
-                ? <span style={{ fontSize: 12, padding: '4px 12px', borderRadius: 10, background: C.green + '22', color: C.green, fontWeight: 700 }}>● CONNECTED</span>
-                : <span style={{ fontSize: 12, padding: '4px 12px', borderRadius: 10, background: C.red + '22', color: C.red, fontWeight: 700 }}>● DISCONNECTED</span>
+                ? <span style={{ fontSize: 13, padding: '4px 12px', borderRadius: 10, background: C.green + '22', color: C.green, fontWeight: 700 }}>● CONNECTED</span>
+                : <span style={{ fontSize: 13, padding: '4px 12px', borderRadius: 10, background: C.red + '22', color: C.red, fontWeight: 700 }}>● DISCONNECTED</span>
               }
             </div>
-            <div style={{ fontSize: 11, color: C.muted, lineHeight: 1.5 }}>
+            <div style={{ fontSize: 12, color: C.muted, lineHeight: 1.6 }}>
               Credentials via env vars:<br />
               <code style={{ color: C.text }}>JIRA_BASE_URL · JIRA_EMAIL · JIRA_TOKEN</code>
             </div>
@@ -83,13 +85,13 @@ export function ConfigPage({ onNotify, onJiraConnected }: Props) {
               {discovering ? 'Discovering…' : 'Discover / Refresh Fields'}
             </button>
             {config && Object.keys(config.fieldMap).length > 0 && (
-              <div style={{ fontSize: 11, color: C.muted, marginTop: 4 }}>
+              <div style={{ fontSize: 12, color: C.muted, marginTop: 4 }}>
                 <div style={{ marginBottom: 6, fontWeight: 600 }}>Mapped fields:</div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                   {Object.entries(config.fieldMap).map(([k, v]) => (
                     <span key={k} style={{
                       padding: '2px 8px', borderRadius: 4,
-                      background: C.purple + '18', color: C.purple, fontSize: 10,
+                      background: C.purple + '18', color: C.purple, fontSize: 11,
                     }}>
                       {k.replace('__', ' → ')} = {v}
                     </span>

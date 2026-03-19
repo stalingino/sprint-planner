@@ -1,7 +1,12 @@
 import { useState } from 'react';
 import type { Task, Sprint, Developer } from '../../types';
-import { C, inputStyle, btnPill } from '../../constants';
-import { StatusBadge } from './StatusBadge';
+import { btnPill } from '../../constants';
+import { useTheme } from '../../ThemeContext';
+import BugIcon from '@atlaskit/icon/core/bug';
+import StoryIcon from '@atlaskit/icon/core/story';
+import EpicIcon from '@atlaskit/icon/core/epic';
+import TaskIcon from '@atlaskit/icon/core/task';
+import SubtasksIcon from '@atlaskit/icon/core/subtasks';
 import { PriorityDot } from './PriorityDot';
 import { Field } from './Field';
 import { parseDate, formatDisplay } from '../../dateUtils';
@@ -12,6 +17,7 @@ interface Props {
   developers: Developer[];
   syncing: Record<string, boolean>;
   devColors: string[];
+  jiraBaseUrl: string;
   onUpdate: (id: string, patch: Partial<Task>) => Promise<void>;
   onRemove: (id: string) => Promise<void>;
   onMove: (id: string, direction: number) => Promise<void>;
@@ -19,19 +25,34 @@ interface Props {
   onPush: (task: Task) => Promise<void>;
 }
 
-export function TasksTable({ tasks, sprints, developers, syncing, devColors, onUpdate, onRemove, onMove, onPull, onPush }: Props) {
+export function TasksTable({ tasks, sprints, developers, syncing, devColors, jiraBaseUrl, onUpdate, onRemove, onMove, onPull, onPush }: Props) {
+  const { C } = useTheme();
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
   const devNames = developers.map(d => d.name);
 
+  function typeIcon(type: string) {
+    const ic = (color: string, el: React.ReactNode) => (
+      <span style={{ color, display: 'inline-flex', verticalAlign: 'middle' }}>{el}</span>
+    );
+    switch (type?.toLowerCase()) {
+      case 'bug':      return ic('#f85149', <BugIcon label={type} />);
+      case 'story':    return ic('#3fb950', <StoryIcon label={type} />);
+      case 'epic':     return ic('#bc8cff', <EpicIcon label={type} />);
+      case 'subtask':
+      case 'sub-task': return ic('#4a9eff', <SubtasksIcon label={type} />);
+      default:         return ic('#4a9eff', <TaskIcon label={type} />);
+    }
+  }
+
   return (
     <div style={{ overflowX: 'auto' }}>
-      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
         <thead>
           <tr style={{ background: C.surface2 }}>
-            {['', 'Key', 'Task', 'Type', 'Priority', 'Sprint', 'Developer', 'Effort', 'Status', 'Start', 'End', 'Spill?', 'Jira Sync', ''].map((h, i) => (
+            {['', 'Key', 'Task', 'Priority', 'Sprint', 'Developer', 'Effort', 'Status', 'Start', 'End', 'Spill?', 'Jira Sync', ''].map((h, i) => (
               <th key={i} style={{
-                padding: '10px 8px', color: C.muted, fontWeight: 700, fontSize: 10,
+                padding: '10px 8px', color: C.muted, fontWeight: 700, fontSize: 11,
                 textTransform: 'uppercase', letterSpacing: 1, textAlign: 'left',
                 borderBottom: `1px solid ${C.border}`, whiteSpace: 'nowrap',
               }}>
@@ -53,32 +74,37 @@ export function TasksTable({ tasks, sprints, developers, syncing, devColors, onU
                 {/* Reorder */}
                 <td style={{ padding: '6px 4px', textAlign: 'center', width: 40 }}>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-                    <button style={{ background: 'none', border: 'none', color: C.muted, cursor: 'pointer', fontSize: 10, lineHeight: 1 }}
+                    <button style={{ background: 'none', border: 'none', color: C.muted, cursor: 'pointer', fontSize: 11, lineHeight: 1 }}
                       onClick={() => onMove(t.id, -1)}>▲</button>
-                    <button style={{ background: 'none', border: 'none', color: C.muted, cursor: 'pointer', fontSize: 10, lineHeight: 1 }}
+                    <button style={{ background: 'none', border: 'none', color: C.muted, cursor: 'pointer', fontSize: 11, lineHeight: 1 }}
                       onClick={() => onMove(t.id, 1)}>▼</button>
                   </div>
                 </td>
                 {/* Key */}
-                <td style={{ padding: '6px 8px', fontWeight: 700, color: C.blue, fontFamily: "ui-monospace, monospace", fontSize: 11, whiteSpace: 'nowrap' }}>
-                  {t.jiraKey || <span style={{ color: C.muted, fontStyle: 'italic' }}>local</span>}
+                <td style={{ padding: '6px 8px', fontWeight: 700, fontFamily: 'ui-monospace, monospace', fontSize: 12, whiteSpace: 'nowrap' }}>
+                  <span style={{ marginRight: 4 }} title={t.type}>{typeIcon(t.type)}</span>
+                  {t.jiraKey
+                    ? <a href={`${jiraBaseUrl}/browse/${t.jiraKey}`} target="_blank" rel="noreferrer"
+                        style={{ color: C.blue, textDecoration: 'none' }}
+                        onMouseEnter={e => (e.currentTarget.style.textDecoration = 'underline')}
+                        onMouseLeave={e => (e.currentTarget.style.textDecoration = 'none')}
+                      >{t.jiraKey}</a>
+                    : <span style={{ color: C.muted, fontStyle: 'italic' }}>local</span>}
                 </td>
                 {/* Summary */}
-                <td style={{ padding: '6px 8px', maxWidth: 240 }}>
+                <td style={{ padding: '6px 8px', maxWidth: 260 }}>
                   <input
-                    style={{ background: 'transparent', border: 'none', color: C.text, fontSize: 12, width: '100%', outline: 'none', fontWeight: 500 }}
+                    style={{ background: 'transparent', border: 'none', color: C.text, fontSize: 13, width: '100%', outline: 'none', fontWeight: 500 }}
                     value={t.summary}
                     onChange={e => onUpdate(t.id, { summary: e.target.value })}
                   />
                 </td>
-                {/* Type */}
-                <td style={{ padding: '6px 8px', fontSize: 11, color: C.muted }}>{t.type}</td>
                 {/* Priority */}
                 <td style={{ padding: '6px 6px' }}><PriorityDot priority={t.priority} /></td>
                 {/* Sprint */}
                 <td style={{ padding: '6px 6px' }}>
                   <select
-                    style={{ background: C.input, border: `1px solid ${C.border}`, color: C.purple, fontSize: 11, borderRadius: 4, padding: '3px 4px', fontWeight: 600 }}
+                    style={{ background: C.input, border: `1px solid ${C.border}`, color: C.purple, fontSize: 12, borderRadius: 4, padding: '4px 6px', fontWeight: 600 }}
                     value={t.sprint}
                     onChange={e => onUpdate(t.id, { sprint: e.target.value })}
                   >
@@ -89,7 +115,7 @@ export function TasksTable({ tasks, sprints, developers, syncing, devColors, onU
                 {/* Developer */}
                 <td style={{ padding: '6px 6px' }}>
                   <select
-                    style={{ background: C.input, border: `1px solid ${C.border}`, color: devColor, fontSize: 11, borderRadius: 4, padding: '3px 4px', fontWeight: 600 }}
+                    style={{ background: C.input, border: `1px solid ${C.border}`, color: devColor, fontSize: 12, borderRadius: 4, padding: '4px 6px', fontWeight: 600 }}
                     value={t.developer}
                     onChange={e => onUpdate(t.id, { developer: e.target.value })}
                   >
@@ -101,7 +127,7 @@ export function TasksTable({ tasks, sprints, developers, syncing, devColors, onU
                 <td style={{ padding: '6px 6px', textAlign: 'center' }}>
                   <input
                     type="number" min="0.5" step="0.5"
-                    style={{ background: C.input, border: `1px solid ${C.border}`, color: C.orange, fontSize: 12, width: 48, textAlign: 'center', borderRadius: 4, padding: '3px 4px', fontWeight: 700 }}
+                    style={{ background: C.input, border: `1px solid ${C.border}`, color: C.orange, fontSize: 13, width: 52, textAlign: 'center', borderRadius: 4, padding: '4px 4px', fontWeight: 700 }}
                     value={t.effortDays || ''}
                     onChange={e => onUpdate(t.id, { effortDays: parseFloat(e.target.value) || 0 })}
                   />
@@ -109,7 +135,7 @@ export function TasksTable({ tasks, sprints, developers, syncing, devColors, onU
                 {/* Status */}
                 <td style={{ padding: '6px 6px' }}>
                   <select
-                    style={{ background: C.input, border: `1px solid ${C.border}`, color: C.text, fontSize: 11, borderRadius: 4, padding: '3px 4px' }}
+                    style={{ background: C.input, border: `1px solid ${C.border}`, color: C.text, fontSize: 12, borderRadius: 4, padding: '4px 6px' }}
                     value={t.status}
                     onChange={e => onUpdate(t.id, { status: e.target.value })}
                   >
@@ -119,18 +145,18 @@ export function TasksTable({ tasks, sprints, developers, syncing, devColors, onU
                   </select>
                 </td>
                 {/* Start */}
-                <td style={{ padding: '6px 6px', fontSize: 11, color: C.green, fontFamily: "ui-monospace, monospace", whiteSpace: 'nowrap' }}>
+                <td style={{ padding: '6px 6px', fontSize: 12, color: C.green, fontFamily: 'ui-monospace, monospace', whiteSpace: 'nowrap' }}>
                   {formatDisplay(parseDate(t.startDate))}
                 </td>
                 {/* End */}
-                <td style={{ padding: '6px 6px', fontSize: 11, color: C.orange, fontFamily: "ui-monospace, monospace", whiteSpace: 'nowrap' }}>
+                <td style={{ padding: '6px 6px', fontSize: 12, color: C.orange, fontFamily: 'ui-monospace, monospace', whiteSpace: 'nowrap' }}>
                   {formatDisplay(parseDate(t.endDate))}
                 </td>
                 {/* Spill */}
                 <td style={{ padding: '6px 6px', textAlign: 'center' }}>
                   {spill
-                    ? <span style={{ color: C.red, fontWeight: 700, fontSize: 11 }}>⚠</span>
-                    : t.endDate ? <span style={{ color: C.green, fontSize: 11 }}>✓</span> : ''}
+                    ? <span style={{ color: C.red, fontWeight: 700, fontSize: 13 }}>⚠</span>
+                    : t.endDate ? <span style={{ color: C.green, fontSize: 13 }}>✓</span> : ''}
                 </td>
                 {/* Sync */}
                 <td style={{ padding: '6px 6px' }}>
@@ -155,8 +181,8 @@ export function TasksTable({ tasks, sprints, developers, syncing, devColors, onU
               </tr>,
               isExpanded && (
                 <tr key={t.id + '_exp'} style={{ background: C.surface2 }}>
-                  <td colSpan={14} style={{ padding: '12px 20px 16px 60px', borderBottom: `1px solid ${C.border}` }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, maxWidth: 700 }}>
+                  <td colSpan={13} style={{ padding: '14px 20px 18px 60px', borderBottom: `1px solid ${C.border}` }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, maxWidth: 720 }}>
                       <Field label="Dev ETA (Date)" value={t.devEta} type="date" onChange={v => onUpdate(t.id, { devEta: v })} />
                       {t.effortL0Num !== null
                         ? <Field label="Dev Effort L0 · num" value={t.effortL0Num} type="number" onChange={v => onUpdate(t.id, { effortL0Num: v ? parseFloat(v) : null })} />
@@ -174,7 +200,7 @@ export function TasksTable({ tasks, sprints, developers, syncing, devColors, onU
                       </div>
                     </div>
                     {t.lastSynced && (
-                      <div style={{ fontSize: 10, color: C.muted, marginTop: 8 }}>
+                      <div style={{ fontSize: 11, color: C.muted, marginTop: 8 }}>
                         Last synced: {new Date(t.lastSynced).toLocaleString()}
                       </div>
                     )}
@@ -185,7 +211,7 @@ export function TasksTable({ tasks, sprints, developers, syncing, devColors, onU
           })}
           {tasks.length === 0 && (
             <tr>
-              <td colSpan={14} style={{ padding: 40, textAlign: 'center', color: C.muted }}>
+              <td colSpan={13} style={{ padding: 40, textAlign: 'center', color: C.muted }}>
                 No tasks yet. Enter a Jira issue key above or add a manual task.
               </td>
             </tr>

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { C, btnStyle } from '../../constants';
+import { btnStyle } from '../../constants';
+import { useTheme } from '../../ThemeContext';
 import { api } from '../../api';
 
 interface Stats {
@@ -20,6 +21,7 @@ function formatBytes(bytes: number): string {
 }
 
 export function DbManager({ onNotify }: Props) {
+  const { C } = useTheme();
   const [stats, setStats] = useState<Stats | null>(null);
   const [restoring, setRestoring] = useState(false);
   const [restarting, setRestarting] = useState(false);
@@ -63,7 +65,6 @@ export function DbManager({ onNotify }: Props) {
       await api.db.restore(file);
       setRestarting(true);
       onNotify('Restore complete — server is restarting…', 'success');
-      // Poll until the server comes back up
       const poll = setInterval(async () => {
         try {
           await fetch('/api/config');
@@ -80,37 +81,34 @@ export function DbManager({ onNotify }: Props) {
 
   return (
     <div>
-      <h3 style={{ color: C.teal, fontSize: 13, marginBottom: 12, fontFamily: "ui-monospace, monospace" }}>
+      <h3 style={{ color: C.teal, fontSize: 15, marginBottom: 12, fontFamily: 'ui-monospace, monospace' }}>
         Database
       </h3>
 
       {restarting ? (
-        <div style={{ fontSize: 12, color: C.orange, fontWeight: 600, padding: '12px 0' }}>
+        <div style={{ fontSize: 13, color: C.orange, fontWeight: 600, padding: '12px 0' }}>
           ⟳ Server restarting… page will reload automatically
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {/* Stats */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           {stats && (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, fontSize: 11 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, fontSize: 13 }}>
               <div style={{ color: C.muted }}>Size: <span style={{ color: C.text, fontWeight: 600 }}>{formatBytes(stats.size)}</span></div>
               <div style={{ color: C.muted }}>Tasks: <span style={{ color: C.text, fontWeight: 600 }}>{stats.taskCount}</span></div>
               <div style={{ color: C.muted }}>Sprints: <span style={{ color: C.text, fontWeight: 600 }}>{stats.sprintCount}</span></div>
-              <div style={{ color: C.muted }}>Developers: <span style={{ color: C.text, fontWeight: 600 }}>{stats.developerCount}</span></div>
+              <div style={{ color: C.muted }}>Devs: <span style={{ color: C.text, fontWeight: 600 }}>{stats.developerCount}</span></div>
             </div>
           )}
 
-          {/* Backup */}
           <div>
             <button style={btnStyle(C.blue)} onClick={handleBackup}>
               ↓ Download Backup
             </button>
-            <div style={{ fontSize: 10, color: C.muted, marginTop: 4 }}>
+            <div style={{ fontSize: 12, color: C.muted, marginTop: 4 }}>
               Downloads a consistent snapshot of the database.
             </div>
           </div>
 
-          {/* Restore */}
           <div>
             <button
               style={btnStyle(C.orange)}
@@ -126,7 +124,7 @@ export function DbManager({ onNotify }: Props) {
               style={{ display: 'none' }}
               onChange={handleRestore}
             />
-            <div style={{ fontSize: 10, color: C.muted, marginTop: 4 }}>
+            <div style={{ fontSize: 12, color: C.muted, marginTop: 4 }}>
               Replaces all data with the backup file. The server will restart automatically.<br />
               Requires container started with <code style={{ color: C.purple }}>--restart=unless-stopped</code>.
             </div>

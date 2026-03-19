@@ -1,5 +1,6 @@
 import type { Holiday } from '../../types';
-import { C, inputStyle, btnStyle } from '../../constants';
+import { btnStyle } from '../../constants';
+import { useTheme } from '../../ThemeContext';
 import { api } from '../../api';
 
 interface Props {
@@ -9,6 +10,8 @@ interface Props {
 }
 
 export function HolidayEditor({ holidays, onChange, onNotify }: Props) {
+  const { C, inputStyle } = useTheme();
+
   async function handleAdd() {
     try {
       await api.holidays.create('', '');
@@ -36,23 +39,23 @@ export function HolidayEditor({ holidays, onChange, onNotify }: Props) {
     }
   }
 
-  const smallInput: React.CSSProperties = { ...inputStyle, fontSize: 10, padding: '3px 5px' };
+  const smallInput: React.CSSProperties = { ...inputStyle, fontSize: 13, padding: '5px 7px' };
 
   return (
     <div>
-      <h3 style={{ color: C.orange, fontSize: 13, marginBottom: 8, fontFamily: "ui-monospace, monospace" }}>Holidays</h3>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 3, maxHeight: 160, overflowY: 'auto' }}>
+      <h3 style={{ color: C.orange, fontSize: 15, marginBottom: 8, fontFamily: 'ui-monospace, monospace' }}>Holidays</h3>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 5, maxHeight: 200, overflowY: 'auto' }}>
         {holidays.map(h => (
-          <div key={h.id} style={{ display: 'grid', gridTemplateColumns: '110px 1fr 20px', gap: 4, alignItems: 'center' }}>
+          <div key={h.id} style={{ display: 'grid', gridTemplateColumns: '130px 1fr 24px', gap: 6, alignItems: 'center' }}>
             <input style={smallInput} type="date" value={h.date}
               onChange={e => handleUpdate(h.id, { date: e.target.value })} />
             <input style={smallInput} value={h.name}
               onChange={e => handleUpdate(h.id, { name: e.target.value })} />
-            <button style={{ background: 'none', border: 'none', color: C.red, cursor: 'pointer', fontSize: 12 }}
+            <button style={{ background: 'none', border: 'none', color: C.red, cursor: 'pointer', fontSize: 16 }}
               onClick={() => handleRemove(h.id)}>×</button>
           </div>
         ))}
-        <button style={{ ...btnStyle(C.orange), padding: '3px 8px', fontSize: 10 }} onClick={handleAdd}>
+        <button style={{ ...btnStyle(C.orange), padding: '5px 10px', fontSize: 12, alignSelf: 'flex-start' }} onClick={handleAdd}>
           + Add Holiday
         </button>
       </div>

@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { C, inputStyle, btnStyle } from '../../constants';
+import { btnStyle } from '../../constants';
+import { useTheme } from '../../ThemeContext';
 
 interface Props {
   onPull: (key: string) => Promise<void>;
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export function IssueAdderBar({ onPull, onManualAdd, onPullAll, onPushAll }: Props) {
+  const { C, inputStyle } = useTheme();
   const [issueKey, setIssueKey] = useState('');
   const [fetching, setFetching] = useState(false);
 
@@ -25,9 +27,9 @@ export function IssueAdderBar({ onPull, onManualAdd, onPullAll, onPushAll }: Pro
       padding: '12px 24px', borderBottom: `1px solid ${C.border}`,
       display: 'flex', alignItems: 'center', gap: 12, background: C.surface2,
     }}>
-      <span style={{ fontSize: 12, color: C.muted, fontWeight: 600 }}>Add Jira Issue:</span>
+      <span style={{ fontSize: 13, color: C.muted, fontWeight: 600 }}>Add Jira Issue:</span>
       <input
-        style={{ ...inputStyle, width: 160, fontSize: 13, fontWeight: 700 }}
+        style={{ ...inputStyle, width: 160, fontWeight: 700 }}
         placeholder="e.g. PKIS-123"
         value={issueKey}
         onChange={e => setIssueKey(e.target.value.toUpperCase())}
@@ -36,7 +38,7 @@ export function IssueAdderBar({ onPull, onManualAdd, onPullAll, onPushAll }: Pro
       <button style={btnStyle(C.green)} disabled={fetching || !issueKey.trim()} onClick={handlePull}>
         {fetching ? 'Fetching…' : '↓ Pull from Jira'}
       </button>
-      <span style={{ fontSize: 10, color: C.muted }}>or</span>
+      <span style={{ fontSize: 12, color: C.muted }}>or</span>
       <button style={btnStyle(C.muted)} onClick={onManualAdd}>
         + Manual Task
       </button>

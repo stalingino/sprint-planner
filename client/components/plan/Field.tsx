@@ -1,4 +1,4 @@
-import { C } from '../../constants';
+import { useTheme } from '../../ThemeContext';
 
 interface FieldProps {
   label: string;
@@ -9,10 +9,11 @@ interface FieldProps {
 }
 
 export function Field({ label, value, onChange, type = 'text', readOnly = false }: FieldProps) {
+  const { C } = useTheme();
   return (
     <div>
       <div style={{
-        fontSize: 10, color: C.muted, marginBottom: 3, fontWeight: 600,
+        fontSize: 11, color: C.muted, marginBottom: 4, fontWeight: 600,
         textTransform: 'uppercase', letterSpacing: 0.5,
       }}>
         {label}
@@ -22,8 +23,8 @@ export function Field({ label, value, onChange, type = 'text', readOnly = false 
         readOnly={readOnly}
         style={{
           background: readOnly ? C.surface2 : C.input, border: `1px solid ${C.border}`, borderRadius: 4,
-          color: C.text, padding: '5px 8px', fontSize: 12, width: '100%', outline: 'none',
-          fontFamily: "ui-monospace, monospace", opacity: readOnly ? 0.6 : 1,
+          color: C.text, padding: '6px 8px', fontSize: 13, width: '100%', outline: 'none',
+          fontFamily: 'ui-monospace, monospace', opacity: readOnly ? 0.6 : 1,
           boxSizing: 'border-box',
         }}
         value={value ?? ''}
