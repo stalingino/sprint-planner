@@ -158,10 +158,16 @@ export function TasksTable({ tasks, sprints, developers, syncing, devColors, onU
                   <td colSpan={14} style={{ padding: '12px 20px 16px 60px', borderBottom: `1px solid ${C.border}` }}>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, maxWidth: 700 }}>
                       <Field label="Dev ETA (Date)" value={t.devEta} type="date" onChange={v => onUpdate(t.id, { devEta: v })} />
-                      <Field label="Dev Effort L0 (Number)" value={t.effortL0Num} type="number" onChange={v => onUpdate(t.id, { effortL0Num: v ? parseFloat(v) : null })} />
-                      <Field label="Dev Effort L0 (Text)" value={t.effortL0Txt} onChange={v => onUpdate(t.id, { effortL0Txt: v })} />
-                      <Field label="Dev Effort L1 (Number)" value={t.effortL1Num} type="number" onChange={v => onUpdate(t.id, { effortL1Num: v ? parseFloat(v) : null })} />
-                      <Field label="Dev Effort L1 (Text)" value={t.effortL1Txt} onChange={v => onUpdate(t.id, { effortL1Txt: v })} />
+                      {t.effortL0Num !== null
+                        ? <Field label="Dev Effort L0 · num" value={t.effortL0Num} type="number" onChange={v => onUpdate(t.id, { effortL0Num: v ? parseFloat(v) : null })} />
+                        : t.effortL0Txt
+                          ? <Field label="Dev Effort L0 · txt" value={t.effortL0Txt} onChange={v => onUpdate(t.id, { effortL0Txt: v })} />
+                          : null}
+                      {t.effortL1Num !== null
+                        ? <Field label="Dev Effort L1 · num" value={t.effortL1Num} type="number" onChange={v => onUpdate(t.id, { effortL1Num: v ? parseFloat(v) : null })} />
+                        : t.effortL1Txt
+                          ? <Field label="Dev Effort L1 · txt" value={t.effortL1Txt} onChange={v => onUpdate(t.id, { effortL1Txt: v })} />
+                          : null}
                       <Field label="Assignee (Jira)" value={t.assignee || '—'} readOnly />
                       <div style={{ gridColumn: '1 / -1' }}>
                         <Field label="Notes" value={t.notes} onChange={v => onUpdate(t.id, { notes: v })} />
