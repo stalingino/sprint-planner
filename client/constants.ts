@@ -19,7 +19,7 @@ export const inputStyle: CSSProperties = {
   boxSizing: 'border-box',
 };
 
-export function btnStyle(color = C.blue): CSSProperties {
+export function btnStyle(color: string = C.blue): CSSProperties {
   return {
     background: color + '22', border: `1px solid ${color}44`, borderRadius: 6,
     color, padding: '6px 14px', fontSize: 12, cursor: 'pointer', fontWeight: 600,

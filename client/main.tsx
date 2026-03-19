@@ -34,7 +34,7 @@ function App() {
       {/* Header */}
       <div style={{
         padding: '16px 24px', borderBottom: `1px solid ${C.border}`,
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        display: 'flex', alignItems: 'center', gap: '1em',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <span style={{
@@ -53,7 +53,7 @@ function App() {
             </span>
           )}
         </div>
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div style={{ display: 'flex', gap: 2 }}>
           <button
             style={btnStyle(page === 'plan' ? C.purple : C.muted)}
             onClick={() => setPage('plan')}

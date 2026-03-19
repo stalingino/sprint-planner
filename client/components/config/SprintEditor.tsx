@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { Sprint } from '../../types';
 import { C, inputStyle, btnStyle } from '../../constants';
 import { api } from '../../api';
@@ -9,15 +10,14 @@ interface Props {
 }
 
 export function SprintEditor({ sprints, onChange, onNotify }: Props) {
+  const [newName, setNewName] = useState('');
+
   async function handleAdd() {
+    if (!newName.trim()) return;
     try {
-      await api.sprints.create({
-        name: `Sprint ${sprints.length + 1}`,
-        start: '',
-        end: '',
-        status: 'Planned',
-      });
+      await api.sprints.create({ name: newName.trim(), start: '', end: '', status: 'Planned' });
       onChange(await api.sprints.list());
+      setNewName('');
     } catch (e: any) {
       onNotify(e.message, 'error');
     }
@@ -41,14 +41,14 @@ export function SprintEditor({ sprints, onChange, onNotify }: Props) {
     }
   }
 
-  const smallInput: React.CSSProperties = { ...inputStyle, fontSize: 11, padding: '4px 6px' };
+  const smallInput: React.CSSProperties = { ...inputStyle, fontSize: 12, padding: '6px 8px' };
 
   return (
     <div>
-      <h3 style={{ color: C.green, fontSize: 13, marginBottom: 10, fontFamily: "ui-monospace, monospace" }}>Sprints</h3>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 4, maxHeight: 220, overflowY: 'auto' }}>
+      <h3 style={{ color: C.green, fontSize: 13, marginBottom: 14, fontFamily: "ui-monospace, monospace" }}>Sprints</h3>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 320, overflowY: 'auto' }}>
         {sprints.map(sp => (
-          <div key={sp.id} style={{ display: 'grid', gridTemplateColumns: '1fr 100px 100px 70px 24px', gap: 4, alignItems: 'center' }}>
+          <div key={sp.id} style={{ display: 'grid', gridTemplateColumns: '1fr 140px 140px 100px 28px', gap: 8, alignItems: 'center' }}>
             <input style={smallInput} value={sp.name}
               onChange={e => handleUpdate(sp.id, { name: e.target.value })} />
             <input style={smallInput} type="date" value={sp.start}
@@ -65,8 +65,20 @@ export function SprintEditor({ sprints, onChange, onNotify }: Props) {
               onClick={() => handleRemove(sp.id)}>×</button>
           </div>
         ))}
-        <button style={{ ...btnStyle(C.green), padding: '4px 10px', fontSize: 11 }} onClick={handleAdd}>
-          + Add Sprint
+      </div>
+      <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
+        <input
+          style={{ ...smallInput, flex: 1 }}
+          placeholder="Sprint name…"
+          value={newName}
+          onChange={e => setNewName(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && handleAdd()}
+        />
+        <button
+          style={{ ...btnStyle(C.green), padding: '6px 16px', opacity: newName.trim() ? 1 : 0.4 }}
+          onClick={handleAdd}
+        >
+          + Add
         </button>
       </div>
     </div>

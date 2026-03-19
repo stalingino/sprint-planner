@@ -44,4 +44,5 @@ export interface Config {
   jiraConnected: boolean;
   fieldMap: Record<string, string>;
   jiraBaseUrl: string;
+  sprintPrefix: string;
 }

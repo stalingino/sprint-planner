@@ -45,6 +45,7 @@ export const api = {
   },
   config: {
     get: () => get('/api/config'),
+    patch: (data: object) => patch('/api/config', data),
   },
   jira: {
     discover: () => post('/api/jira/discover'),

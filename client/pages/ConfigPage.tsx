@@ -48,64 +48,80 @@ export function ConfigPage({ onNotify, onJiraConnected }: Props) {
     setDiscovering(false);
   }
 
+  const panel: React.CSSProperties = {
+    background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10, padding: 24,
+  };
+
   return (
-    <div style={{ padding: 24 }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 24, maxWidth: 1400 }}>
-        {/* Jira Status */}
-        <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, padding: 16 }}>
-          <h3 style={{ color: C.blue, fontSize: 13, marginBottom: 12, fontFamily: "ui-monospace, monospace" }}>
+    <div style={{ padding: 32, display: 'flex', flexDirection: 'column', gap: 24 }}>
+
+      {/* Row 1: Jira + Sprints */}
+      <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: 24 }}>
+
+        {/* Jira Connection */}
+        <div style={panel}>
+          <h3 style={{ color: C.blue, fontSize: 13, marginBottom: 16, fontFamily: "ui-monospace, monospace" }}>
             Jira Connection
           </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {config?.jiraBaseUrl && (
-              <div style={{ fontSize: 11, color: C.muted }}>
+              <div style={{ fontSize: 12, color: C.muted }}>
                 Instance: <span style={{ color: C.text, fontWeight: 600 }}>{config.jiraBaseUrl}</span>
               </div>
             )}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div>
               {config?.jiraConnected
-                ? <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 10, background: C.green + '22', color: C.green, fontWeight: 700 }}>● CONNECTED</span>
-                : <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 10, background: C.red + '22', color: C.red, fontWeight: 700 }}>● DISCONNECTED</span>
+                ? <span style={{ fontSize: 12, padding: '4px 12px', borderRadius: 10, background: C.green + '22', color: C.green, fontWeight: 700 }}>● CONNECTED</span>
+                : <span style={{ fontSize: 12, padding: '4px 12px', borderRadius: 10, background: C.red + '22', color: C.red, fontWeight: 700 }}>● DISCONNECTED</span>
               }
             </div>
-            <div style={{ fontSize: 10, color: C.muted }}>
-              Credentials are set via environment variables (JIRA_BASE_URL, JIRA_EMAIL, JIRA_TOKEN)
+            <div style={{ fontSize: 11, color: C.muted, lineHeight: 1.5 }}>
+              Credentials via env vars:<br />
+              <code style={{ color: C.text }}>JIRA_BASE_URL · JIRA_EMAIL · JIRA_TOKEN</code>
             </div>
             <button style={btnStyle(C.green)} onClick={handleDiscover} disabled={discovering}>
               {discovering ? 'Discovering…' : 'Discover / Refresh Fields'}
             </button>
             {config && Object.keys(config.fieldMap).length > 0 && (
-              <div style={{ fontSize: 10, color: C.muted, marginTop: 4 }}>
-                <div style={{ marginBottom: 4, fontWeight: 600 }}>Mapped fields:</div>
-                {Object.entries(config.fieldMap).map(([k, v]) => (
-                  <span key={k} style={{
-                    display: 'inline-block', margin: '2px 4px', padding: '1px 6px', borderRadius: 3,
-                    background: C.purple + '18', color: C.purple, fontSize: 10,
-                  }}>
-                    {k.replace('__', ' → ')} = {v}
-                  </span>
-                ))}
+              <div style={{ fontSize: 11, color: C.muted, marginTop: 4 }}>
+                <div style={{ marginBottom: 6, fontWeight: 600 }}>Mapped fields:</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                  {Object.entries(config.fieldMap).map(([k, v]) => (
+                    <span key={k} style={{
+                      padding: '2px 8px', borderRadius: 4,
+                      background: C.purple + '18', color: C.purple, fontSize: 10,
+                    }}>
+                      {k.replace('__', ' → ')} = {v}
+                    </span>
+                  ))}
+                </div>
               </div>
             )}
           </div>
         </div>
 
         {/* Sprints */}
-        <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, padding: 16 }}>
+        <div style={panel}>
           <SprintEditor sprints={sprints} onChange={setSprints} onNotify={onNotify} />
         </div>
+      </div>
 
-        {/* Developers + Holidays */}
-        <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, padding: 16, display: 'flex', flexDirection: 'column', gap: 20 }}>
+      {/* Row 2: Developers + Holidays + Database */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 280px', gap: 24 }}>
+
+        <div style={panel}>
           <DeveloperEditor developers={developers} onChange={setDevelopers} onNotify={onNotify} />
+        </div>
+
+        <div style={panel}>
           <HolidayEditor holidays={holidays} onChange={setHolidays} onNotify={onNotify} />
         </div>
 
-        {/* Database */}
-        <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8, padding: 16 }}>
+        <div style={panel}>
           <DbManager onNotify={onNotify} />
         </div>
       </div>
+
     </div>
   );
 }

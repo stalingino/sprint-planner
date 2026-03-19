@@ -1,18 +1,35 @@
 import { db } from '../db';
 import { isConfigured } from '../lib/jiraClient';
 
-export function handleConfig(req: Request): Response {
-  if (req.method !== 'GET') return new Response('Method not allowed', { status: 405 });
-
+function getConfig() {
   const fieldMapRows = db.query('SELECT label_type, field_id FROM field_map').all() as any[];
   const fieldMap = Object.fromEntries(fieldMapRows.map((r: any) => [r.label_type, r.field_id]));
   const jiraConnectedDb = (db.query("SELECT value FROM app_config WHERE key='jira_connected'").get() as any)?.value === 'true';
-
-  return Response.json({
+  const sprintPrefix = (db.query("SELECT value FROM app_config WHERE key='sprint_prefix'").get() as any)?.value ?? 'Sprint';
+  return {
     jiraConnected: jiraConnectedDb && isConfigured(),
     fieldMap,
     jiraBaseUrl: process.env.JIRA_BASE_URL ?? '',
-  });
+    sprintPrefix,
+  };
+}
+
+export function handleConfig(req: Request): Response | Promise<Response> {
+  if (req.method === 'GET') {
+    return Response.json(getConfig());
+  }
+
+  if (req.method === 'PATCH') {
+    return (async () => {
+      const body = await req.json() as any;
+      if (body.sprintPrefix !== undefined) {
+        db.query("INSERT OR REPLACE INTO app_config (key, value) VALUES ('sprint_prefix', ?)").run(String(body.sprintPrefix));
+      }
+      return Response.json(getConfig());
+    })();
+  }
+
+  return new Response('Method not allowed', { status: 405 });
 }
 
 export async function handleImport(req: Request): Promise<Response> {
