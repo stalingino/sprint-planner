@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# SQLite database & WAL files
+data/*.db
+data/*.db-shm
+data/*.db-wal
+
+# Environment / secrets
+.env
+.env.local
+
+# Bun lockfile (optional — commit if you want reproducible installs)
+# bun.lock
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+*.swp
